@@ -23,7 +23,7 @@ defmodule SensorHub.MixProject do
   def application do
     [
       mod: {SensorHub.Application, []},
-      extra_applications: [:logger, :runtime_tools, :inets]
+      extra_applications: [:logger, :runtime_tools, :inets, :crypto]
     ]
   end
 
@@ -33,10 +33,12 @@ defmodule SensorHub.MixProject do
       # Application-specific dependencies
       {:circuits_i2c, "~> 0.3.8"},
       {:pubsub, "~> 1.0"},
-      {:veml6030, path: "../veml6030", targets: @all_targets},
       {:graylog_publisher, path: "../graylog_publisher", targets: @all_targets},
+      {:veml6030, path: "../veml6030", targets: @all_targets},
       {:sgp30, "~> 0.2.0", targets: @all_targets},
       {:bmp280, "~> 0.2.5", targets: @all_targets},
+      {:hap, "~> 0.4.5", targets: @all_targets},
+      {:telemetry, "~> 1.0", override: true},
 
       # Dependencies for all targets
       {:nerves, "~> 1.7.0", runtime: false},

@@ -41,7 +41,7 @@ defmodule GraylogPublisher do
 
   defp publish(state) do
     Enum.map(state.measurements, fn reading ->
-      Logger.debug("Publishing #{inspect(reading)}")
+      #Logger.debug("Publishing #{inspect(reading)}")
       [source, values] = reading
       payload = Map.merge(%{
         version: "1.1",
@@ -50,7 +50,7 @@ defmodule GraylogPublisher do
         level: 1,
         short_message: Jason.encode!(values),
         }, prefix_keys(values))
-      Logger.debug("Sending #{inspect(Jason.encode!(payload))}")
+      #Logger.debug("Sending #{inspect(Jason.encode!(payload))}")
       result =
         :post
         |> Finch.build(
@@ -60,7 +60,7 @@ defmodule GraylogPublisher do
         )
         |> Finch.request(GraylogClient)
 
-      Logger.debug("Server response: #{inspect(result)}")
+      #Logger.debug("Server response: #{inspect(result)}")
       end)
 
     schedule_next_publish(state.interval)

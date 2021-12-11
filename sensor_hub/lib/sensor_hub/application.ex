@@ -28,6 +28,19 @@ defmodule SensorHub.Application do
   end
 
   def children(_target) do
+    hap_server_config = %HAP.AccessoryServer{
+      name: "My HAP Demo Device",
+      identifier: "11:22:33:44:55:66",
+      accessory_type: 5,
+      accessories: [
+        %HAP.Accessory{
+          name: "My HAP Lightbulb",
+          services: [
+          ]
+        }
+      ]
+    }
+
     [
       {SGP30, []},
       {BMP280, [i2c_address: 0x77, name: BMP280]},
@@ -39,7 +52,8 @@ defmodule SensorHub.Application do
           sensors: sensors(),
           graylog_url: graylog_url()
         }
-      }
+      },
+      {HAP, hap_server_config},
     ]
   end
 
