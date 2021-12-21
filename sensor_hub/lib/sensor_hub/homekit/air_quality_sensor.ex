@@ -30,9 +30,31 @@ defmodule SensorHub.Homekit.AirQualitySensor do
     {:ok, state}
   end
 
+  defp grade_co2(co2) do
+    case co2 do
+      _ when co2 > 5000 -> 2
+      _ when co2 > 2000 -> 1
+      _ -> 0
+    end
+  end
+
+  defp grade_tvoc(tvoc) do
+    case tvoc do
+      _ when tvoc > 4000 -> 2
+      _ when tvoc > 1300 -> 1
+      _ -> 0
+    end
+  end
+
   @impl GenServer
   def handle_call({:get, sensor: sensor}, _from, state) do
-    {:reply, {:ok, 1}, state}
+    ["air_quality", %{ co2_eq_ppm: co2, tvoc_ppb: tvoc }] = sensor.read.() |> sensor.convert.()
+
+    value = 1 + grade_co2(co2) + grade_tvoc(tvoc)
+
+    Logger.info("Writing air quality value of #{value}")
+
+    {:reply, {:ok, value}, state}
   end
 
   @impl GenServer

@@ -39,7 +39,7 @@ defmodule SensorHub.Application do
             %HAP.Services.AirQualitySensor {
               air_quality: {
                 SensorHub.Homekit.AirQualitySensor,
-                sensor: Sensor.new(BMP280)
+                sensor: Sensor.new(SGP30)
               }
             },
             %HAP.Services.LightSensor {
