@@ -29,13 +29,37 @@ defmodule SensorHub.Application do
 
   def children(_target) do
     hap_server_config = %HAP.AccessoryServer{
-      name: "My HAP Demo Device",
-      identifier: "11:22:33:44:55:66",
-      accessory_type: 5,
+      name: "Nerves Air Quality Sensor",
+      identifier: "12:34:56:78:90:AB",
+      accessory_type: 10,
       accessories: [
         %HAP.Accessory{
-          name: "My HAP Lightbulb",
+          name: "Air Quality Sensor",
           services: [
+            %HAP.Services.AirQualitySensor {
+              air_quality: {
+                SensorHub.Homekit.AirQualitySensor,
+                sensor: Sensor.new(BMP280)
+              }
+            },
+            %HAP.Services.LightSensor {
+              light_level: {
+                SensorHub.Homekit.LightSensor,
+                sensor: Sensor.new(VEML6030)
+              }
+            },
+            %HAP.Services.HumiditySensor {
+              current_relative_humidity: {
+                SensorHub.Homekit.HumiditySensor,
+                sensor: Sensor.new(BMP280)
+              }
+            },
+            %HAP.Services.TemperatureSensor {
+              temperature: {
+                SensorHub.Homekit.TemperatureSensor,
+                sensor: Sensor.new(BMP280)
+              }
+            }
           ]
         }
       ]
@@ -54,6 +78,12 @@ defmodule SensorHub.Application do
         }
       },
       {HAP, hap_server_config},
+      SensorHub.Homekit.AirQualitySensor,
+      SensorHub.Homekit.CarbonDioxideSensor,
+      SensorHub.Homekit.CarbonDioxideLevel,
+      SensorHub.Homekit.LightSensor,
+      SensorHub.Homekit.HumiditySensor,
+      SensorHub.Homekit.TemperatureSensor,
     ]
   end
 
